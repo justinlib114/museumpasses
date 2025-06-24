@@ -341,8 +341,15 @@ function bookItem(url, date, itemId, locationId, isDigital) {
 
 
   
+window.addEventListener("load", () => {
+    // Set the current date in the date input on load
+    document.getElementById('current-date').value = currentDate.toISOString().split('T')[0];
+
     // Fetch data on page load
     fetchAndDisplayData();
+});
+
+
 </script>
 
 </body>
