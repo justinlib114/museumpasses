@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passes Availability</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .tables-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .table-container {
+            flex: 1 1 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .availability-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            flex-grow: 1;
+        }
+        .availability-table, .availability-table th, .availability-table td {
+            border: 1px solid #ddd;
+        }
+        .availability-table th, .availability-table td {
+            padding: 8px;
+            text-align: center;
+            white-space: normal;
+        }
+        .availability-table th {
+            background-color: #f2f2f2;
+        }
+        .availability-table th:nth-child(2), .availability-table td:nth-child(2) {
+            width: 150px;
+        }
+        .available {
+            color: green;
+        }
+        .not-available {
+            color: red;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .controls button {
+            margin: 0 5px;
+            padding: 5px 10px;
+        }
+        .date-display {
+            display: inline-block;
+            width: 140px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        a {
+            color: blue;
+        }
+        @media (min-width: 600px) {
+            .table-container {
+                flex: 1 1 calc(50% - 10px);
+            }
+        }
+    </style>
+    <!-- Add this to avoid favicon 404 error -->
+    <link rel="icon" href="data:,">
+</head>
+<body>
+
+<div class="controls">
+    <button onclick="changeDate(-1)">Previous Day</button>
+    <input class="date-display" id="current-date" type="date" onchange="changeDateToSelected()" />
+    <button onclick="changeDate(1)">Next Day</button>
+</div>
+
+<div class="tables-wrapper">
+    <div class="table-container">
+        <table class="availability-table" id="availability-table-1">
+            <thead>
+                <tr>
+                    <th>Institution Name</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+            <tbody id="availability-status-1">
+            </tbody>
+        </table>
+    </div>
+    <div class="table-container">
+        <table class="availability-table" id="availability-table-2">
+            <thead>
+                <tr>
+                    <th>Institution Name</th>
+                    <th>Availability</th>
+                </tr>
+            </thead>
+            <tbody id="availability-status-2">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let currentDate = new Date();
+
+    const physicalItemLinks = {
+        "Empire Pass": "https://greenburghlibrary.libcal.com/passes/empirepass",
+        "9/11 Memorial & Museum": "https://greenburghlibrary.libcal.com/passes/911memorialmuseum",
+        "El Museo del Barrio (with NARM and Mod/Co benefits)": "https://greenburghlibrary.libcal.com/passes/elmuseo",
+        "Greenburgh Nature Center": "https://greenburghlibrary.libcal.com/passes/gnc",
+        "Guggenheim Museum": "https://greenburghlibrary.libcal.com/passes/guggenheim",
+        "Hudson River Museum": "https://greenburghlibrary.libcal.com/passes/hrm",
+        "Intrepid Museum": "https://greenburghlibrary.libcal.com/passes/intrepid",
+      "The Jewish Museum - Physical Pass": "https://greenburghlibrary.libcal.com/passes/tjm",
+        "Museum of Modern Art": "https://greenburghlibrary.libcal.com/passes/moma",
+        "New York Historical Society": "https://greenburghlibrary.libcal.com/passes/nyhistorical",
+        "Stepping Stones Museum for Children": "https://greenburghlibrary.libcal.com/passes/steppingstones",
+        "Storm King Art Center": "https://greenburghlibrary.libcal.com/passes/skac",
+        "Westchester Children's Museum": "https://greenburghlibrary.libcal.com/passes/wcm"
+    };
+
+    const digitalItemLinks = {
+        '5ecf4efa1af9': 'https://greenburghlibrary.libcal.com/passes/wcs',
+        '68b26db9aa61': 'https://greenburghlibrary.libcal.com/passes/fdr'
+    };
+
+    const digitalItemNames = {
+        '5ecf4efa1af9': 'Wildlife Conservation Society Discount Code',
+        '68b26db9aa61': 'FDR Presidential Library & Museum'
+    };
+
+    async function fetchAccessToken(type) {
+        try {
+            const response = await fetch(`/token?type=${type}`);
+            const data = await response.json();
+            return data.token;
+        } catch (error) {
+            console.error('Error fetching token:', error);
+            return null;
+        }
+    }
+
+    async function fetchPhysicalStatus(accessToken) {
+        const today = currentDate.toISOString().split('T')[0];
+        const itemIds = '177358,155948,148614,158349,148556,148555,148557,148558,148638,148563,148562,155708,157926,157700,148567,177365,148569,188153';
+        const url = `https://greenburghlibrary.libcal.com/1.1/equipment/item/${itemIds}`;
+        const headers = {
+            'Authorization': `Bearer ${accessToken}`
+        };
+        const params = new URLSearchParams({
+            'availability': today
+        });
+
+        try {
+            const response = await fetch(`${url}?${params.toString()}`, {
+                method: 'GET',
+                headers: headers
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to fetch equipment status: ${response.status} ${response.statusText} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching equipment status:', error);
+            return [];
+        }
+    }
+
+    async function fetchDigitalAvailability(accessToken) {
+        const baseUrl = 'https://greenburghlibrary.libcal.com/api/1.1';
+        const endpoint = '/passes/digital/{id}/availability';
+        const ids = '5ecf4efa1af9,68b26db9aa61';
+
+        const fromDate = currentDate.toISOString().split('T')[0];
+        const toDate = new Date(currentDate);
+        toDate.setDate(toDate.getDate() + 7);
+        const formattedToDate = toDate.toISOString().split('T')[0];
+
+        const headers = {
+            'Authorization': `Bearer ${accessToken}`
+        };
+
+        async function fetchInstitutionAvailability(institutionId) {
+            const url = `${baseUrl}${endpoint.replace('{id}', institutionId)}`;
+            const params = new URLSearchParams({
+                'from': fromDate,
+                'to': formattedToDate
+            });
+
+            try {
+                const response = await fetch(`${url}?${params}`, { headers });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch availability for ${institutionId}: ${response.status} ${response.statusText} - ${errorText}`);
+                }
+
+                const data = await response.json();
+                return { institutionId, data, fromDate };
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return { institutionId, error: 'Network error' };
+            }
+        }
+
+        const availabilityPromises = ids.split(',').map(fetchInstitutionAvailability);
+        const availabilityResults = await Promise.all(availabilityPromises);
+        return availabilityResults;
+    }
+
+    function displayAvailability(digitalData, physicalData) {
+        const statusTable1 = document.getElementById('availability-status-1');
+        const statusTable2 = document.getElementById('availability-status-2');
+        statusTable1.innerHTML = ''; // Clear any existing content
+        statusTable2.innerHTML = ''; // Clear any existing content
+
+        const combinedData = [];
+
+        physicalData.forEach(item => {
+            const availability = item.availability && item.availability.length > 0 ? 'Available' : 'Not Available';
+            const availabilityClass = availability === 'Available' ? 'available' : 'not-available';
+            const itemUrl = physicalItemLinks[item.name] || '#';
+
+            combinedData.push({
+                name: item.name,
+                url: itemUrl,
+                availability: availability,
+                availabilityClass: availabilityClass,
+                itemId: item.id,
+                isDigital: false
+            });
+        });
+
+        digitalData.forEach(result => {
+            const { institutionId, data, fromDate } = result;
+            const institutionName = digitalItemNames[institutionId];
+            const itemUrl = digitalItemLinks[institutionId];
+            const isTodayAvailable = Object.keys(data.available).includes(fromDate);
+            const availabilityClass = isTodayAvailable ? 'available' : 'not-available';
+            const availabilityText = isTodayAvailable ? 'Available' : 'Not Available';
+
+            combinedData.push({
+                name: institutionName,
+                url: itemUrl,
+                availability: availabilityText,
+                availabilityClass: availabilityClass,
+                itemId: institutionId, // Assuming the digital item ID is the institutionId
+                isDigital: true
+            });
+        });
+
+        // Group the items based on name and split them between two tables
+        const groupedData = combinedData.reduce((acc, item) => {
+            acc[item.name] = acc[item.name] || [];
+            acc[item.name].push(item);
+            return acc;
+        }, {});
+
+        const sortedKeys = Object.keys(groupedData).sort();
+        const halfKeys = Math.ceil(sortedKeys.length / 2);
+        const firstHalf = sortedKeys.slice(0, halfKeys);
+        const secondHalf = sortedKeys.slice(halfKeys);
+
+        const firstHalfData = firstHalf.flatMap(name => groupedData[name]);
+        const secondHalfData = secondHalf.flatMap(name => groupedData[name]);
+
+        function addRowsToTable(data, table) {
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a href="${item.url}" target="_blank">${item.name}</a></td>
+                    <td class="${item.availabilityClass}">${item.availability} ${
+                    item.availability === 'Available'
+                        ? `<button onclick="bookItem('${item.url}', '${currentDate.toISOString().split('T')[0]}', '${item.itemId}', ${item.isDigital})">Book</button>`
+                        : ''
+                }</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        // Add rows to the first and second tables
+        addRowsToTable(firstHalfData, statusTable1);
+        addRowsToTable(secondHalfData, statusTable2);
+    }
+
+    async function fetchAndDisplayData() {
+        const physicalToken = await fetchAccessToken('physical');
+        const digitalToken = await fetchAccessToken('digital');
+
+        if (physicalToken && digitalToken) {
+            const physicalData = await fetchPhysicalStatus(physicalToken);
+            const digitalData = await fetchDigitalAvailability(digitalToken);
+
+            displayAvailability(digitalData, physicalData);
+        } else {
+            document.getElementById('availability-status-1').textContent = 'Failed to obtain access tokens.';
+            document.getElementById('availability-status-2').textContent = 'Failed to obtain access tokens.';
+        }
+    }
+
+    function changeDate(days) {
+        currentDate.setDate(currentDate.getDate() + days);
+        document.getElementById('current-date').value = currentDate.toISOString().split('T')[0];
+        fetchAndDisplayData();
+    }
+
+    function changeDateToSelected() {
+        const selectedDate = document.getElementById('current-date').value;
+        currentDate = new Date(selectedDate);
+        fetchAndDisplayData();
+    }
+
+function bookItem(url, date, itemId, locationId, isDigital) {
+    let bookingUrl;
+    if (isDigital) {
+        bookingUrl = `${url}/book?date=${date}&pass=${itemId}&digital=1&physical=0&location=${locationId}`;
+    } else {
+        bookingUrl = `${url}/physical?date=${date}&item=${itemId}&digital=0&physical=1&location=${locationId}`;
+    }
+    window.open(bookingUrl, '_blank');
+}
+
+
+
+    function sendHeight() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ frameHeight: height }, "*");
+    }
+
+    window.addEventListener("load", sendHeight);
+    window.addEventListener("resize", sendHeight);
+
+
+  
+    // Fetch data on page load
+    fetchAndDisplayData();
+</script>
+
+</body>
+</html>

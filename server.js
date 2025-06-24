@@ -1,0 +1,75 @@
+const express = require("express");
+const fetch = require("node-fetch");
+const path = require("path");
+const cors = require("cors"); // Import the cors package
+const cron = require("node-cron"); // Import the node-cron package
+require("dotenv").config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Enable CORS for all routes
+app.use(cors()); // Add this line to enable CORS for all requests
+
+// Serve static files (index.html, CSS, JS)
+app.use(express.static("public"));
+
+// Endpoint to get access tokens securely
+app.get("/token", async (req, res) => {
+  const { type } = req.query; // 'physical' or 'digital'
+  let clientId, clientSecret;
+
+  if (type === "physical") {
+    clientId = process.env.CLIENT_ID_PHYSICAL;
+    clientSecret = process.env.CLIENT_SECRET_PHYSICAL;
+  } else if (type === "digital") {
+    clientId = process.env.CLIENT_ID_DIGITAL;
+    clientSecret = process.env.CLIENT_SECRET_DIGITAL;
+  } else {
+    return res.status(400).send("Invalid type");
+  }
+
+  const tokenUrl = "https://greenburghlibrary.libcal.com/1.1/oauth/token";
+  const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: "client_credentials",
+  });
+
+  try {
+    const response = await fetch(tokenUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body.toString(),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to fetch token: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+    res.json({ token: data.access_token });
+  } catch (error) {
+    console.error("Error fetching access token:", error);
+    res.status(500).send("Failed to obtain token");
+  }
+});
+
+// Schedule a self-ping task to keep the app awake
+cron.schedule("*/5 * * * *", () => {
+  console.log("Pinging self to stay awake...");
+  fetch(`https://${process.env.PROJECT_DOMAIN}.glitch.me`) // Automatically uses your Glitch project URL
+    .then((res) => res.text())
+    .then((text) => console.log("Self-ping successful"))
+    .catch((err) => console.error("Error pinging:", err));
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`);
+});
