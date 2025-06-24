@@ -60,15 +60,6 @@ app.get("/token", async (req, res) => {
   }
 });
 
-// Schedule a self-ping task to keep the app awake
-cron.schedule("*/5 * * * *", () => {
-  console.log("Pinging self to stay awake...");
-  fetch(`https://${process.env.PROJECT_DOMAIN}.glitch.me`) // Automatically uses your Glitch project URL
-    .then((res) => res.text())
-    .then((text) => console.log("Self-ping successful"))
-    .catch((err) => console.error("Error pinging:", err));
-});
-
 // Start the server
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
