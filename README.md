@@ -115,7 +115,7 @@ This project is easily deployable on [Render](https://render.com), a cloud platf
 
   <div class="section">
     <h2>📷 UI Preview</h2>
-    <p><img src="[https://via.placeholder.com/700x300?text=Pass+Availability+UI](https://greenburghlibrary.libcal.com/passes)" alt="UI Preview" style="max-width: 100%; border: 1px solid #ccc;"></p>
+    <p><img src="https://greenburghlibrary.libcal.com/passes" alt="UI Preview" style="max-width: 100%; border: 1px solid #ccc;"></p>
   </div>
 
   <div class="section">
