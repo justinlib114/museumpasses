@@ -73,46 +73,37 @@ npm start</code></pre>
     <p>Visit <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your browser.</p>
   </div>
 
-<div class="section">
-  <h2>🚀 Deploying to Render</h2>
+### 🚀 Deploying to Render
 
-  <p>This project is easily deployable on <a href="https://render.com" target="_blank">Render</a>, a cloud platform for hosting web apps. Follow these steps:</p>
+This project is easily deployable on [Render](https://render.com), a cloud platform for hosting web apps. Follow these steps:
 
-  <ol>
-    <li><strong>Log in</strong> or <strong>sign up</strong> at <a href="https://render.com" target="_blank">https://render.com</a>.</li>
+1. **Log in** or **sign up** at [https://render.com](https://render.com).
 
-    <li>Click <strong>"New Web Service"</strong> from the Render dashboard.</li>
+2. Click **"New Web Service"** from the Render dashboard.
 
-    <li><strong>Connect your GitHub repository</strong> or paste the repo URL if deploying from GitHub.</li>
+3. **Connect your GitHub repository** or paste the repo URL if deploying from GitHub.
 
-    <li>Fill out the deployment form:
-      <ul>
-        <li><strong>Name:</strong> Your app name (e.g., <code>library-passes</code>)</li>
-        <li><strong>Environment:</strong> Node</li>
-        <li><strong>Build Command:</strong> <code>npm install</code></li>
-        <li><strong>Start Command:</strong> <code>npm start</code></li>
-        <li><strong>Node Version:</strong> <code>16</code> (set in <code>package.json</code>)</li>
-      </ul>
-    </li>
+4. Fill out the deployment form:
+   - **Name:** Your app name (e.g., `library-passes`)
+   - **Environment:** Node
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Node Version:** `16` (already specified in `package.json`)
 
-    <li><strong>Set environment variables</strong> (click “Add Environment Variable”):
-      <ul>
-        <li><code>CLIENT_ID_PHYSICAL</code></li>
-        <li><code>CLIENT_SECRET_PHYSICAL</code></li>
-        <li><code>CLIENT_ID_DIGITAL</code></li>
-        <li><code>CLIENT_SECRET_DIGITAL</code></li>
-      </ul>
-      <p>Use the same values found in your local <code>.env</code> file.</p>
-    </li>
+5. **Set environment variables** (click “Add Environment Variable”):
+   - `CLIENT_ID_PHYSICAL`
+   - `CLIENT_SECRET_PHYSICAL`
+   - `CLIENT_ID_DIGITAL`
+   - `CLIENT_SECRET_DIGITAL`
 
-    <li>Click <strong>"Create Web Service"</strong>. Render will build and deploy your app.</li>
+   Use the same values found in your local `.env` file.
 
-    <li>Once deployed, you’ll receive a live URL (e.g., <code>https://library-passes.onrender.com</code>).</li>
-  </ol>
+6. Click **"Create Web Service"**. Render will build and deploy your app.
 
-  <div class="highlight">
-    <strong>Note:</strong> Render automatically redeploys your app when you push new changes to your GitHub repo.
-  </div>
+7. Once deployed, you’ll receive a live URL (e.g., `https://library-passes.onrender.com`).
+
+> **Note:** Render automatically redeploys your app when you push new changes to your GitHub repo.
+
 
   <h3>🌐 Example Deployment URL</h3>
   <p>
