@@ -112,11 +112,7 @@ This project is easily deployable on [Render](https://render.com), a cloud platf
   </p>
 </div>
 
-
-  <div class="section">
-    <h2>📷 UI Preview</h2>
-    <p><img src="https://greenburghlibrary.libcal.com/passes" alt="UI Preview" style="max-width: 100%; border: 1px solid #ccc;"></p>
-  </div>
+https://greenburghlibrary.libcal.com/passes
 
   <div class="section">
     <h2>📚 Maintained by</h2>
