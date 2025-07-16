@@ -2,39 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-      background-color: #fafafa;
-      color: #333;
-    }
-    h1, h2, h3 {
-      color: #00529B;
-    }
-    code, pre {
-      background-color: #eee;
-      padding: 4px 6px;
-      border-radius: 4px;
-      font-family: Consolas, monospace;
-    }
-    pre {
-      overflow-x: auto;
-      padding: 10px;
-    }
-    .highlight {
-      background: #dff0d8;
-      padding: 8px;
-      border-left: 5px solid #3c763d;
-    }
-    .section {
-      margin-bottom: 30px;
-    }
-  </style>
-</head>
+ </head>
 <body>
 
   <h1>🎟️ Library Passes Availability</h1>
