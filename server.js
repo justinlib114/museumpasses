@@ -60,6 +60,11 @@ app.get("/token", async (req, res) => {
   }
 });
 
+// Lightweight endpoint for external cron job pings
+app.get("/ping", (req, res) => {
+  res.send("OK");
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
