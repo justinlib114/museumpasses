@@ -319,15 +319,18 @@
         fetchAndDisplayData();
     }
 
-function bookItem(url, date, itemId, locationId, isDigital) {
+function bookItem(url, date, itemId, isDigital) {
     let bookingUrl;
     if (isDigital) {
-        bookingUrl = `${url}/book?date=${date}&pass=${itemId}&digital=1&physical=0&location=${locationId}`;
+        // Digital pass logic
+        bookingUrl = `${url}/book?date=${date}&pass=${itemId}&digital=1&physical=0&location=0`;
     } else {
-        bookingUrl = `${url}/physical?date=${date}&item=${itemId}&digital=0&physical=1&location=${locationId}`;
+        // Physical pass logic
+        bookingUrl = `${url}/physical?date=${date}&item=${itemId}&digital=0&physical=1&location=true`;
     }
     window.open(bookingUrl, '_blank');
 }
+
 
 
 
