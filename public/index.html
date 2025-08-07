@@ -107,7 +107,9 @@
 
 <script>
     let currentDate = new Date();
-
+    // 🧾 Map of physical pass item names to their LibCal public URLs
+    // ⚠️ The key **must match exactly** the Item Name in LibCal (not the Category name)
+    const physicalItemLinks = {
     const physicalItemLinks = {
         "Empire Pass": "https://greenburghlibrary.libcal.com/passes/empirepass",
         "9/11 Memorial & Museum": "https://greenburghlibrary.libcal.com/passes/911memorialmuseum",
@@ -123,12 +125,14 @@
         "Storm King Art Center": "https://greenburghlibrary.libcal.com/passes/skac",
         "Westchester Children's Museum": "https://greenburghlibrary.libcal.com/passes/wcm"
     };
-
+     // 🌐 Digital item URLs based on their LibCal digital pass ID
+    // ➕ These IDs come from the public URL (after /passes/) when friendly URL is disabled
     const digitalItemLinks = {
         '5ecf4efa1af9': 'https://greenburghlibrary.libcal.com/passes/wcs',
         '68b26db9aa61': 'https://greenburghlibrary.libcal.com/passes/fdr'
     };
-
+     // 🏷️ Map of digital pass IDs to the name of the pass category
+    // ⚠️ These must match the Digital Pass name set in LibCal exactly
     const digitalItemNames = {
         '5ecf4efa1af9': 'Wildlife Conservation Society Discount Code',
         '68b26db9aa61': 'FDR Presidential Library & Museum'
@@ -144,7 +148,9 @@
             return null;
         }
     }
-
+    // 🔧 Physical pass equipment item IDs
+    // 📍 How to find: LibCal > Admin > Spaces & Equipment > Location > Equipment & Categories
+    // Use the Item ID (not the category ID) for each museum pass
     async function fetchPhysicalStatus(accessToken) {
         const today = currentDate.toISOString().split('T')[0];
         const itemIds = '177358,<!--155948--!>,148614,158349,148556,148555,148557,148558,148638,148563,148562,155708,157926,157700,148567,177365,148569,188153';
@@ -174,7 +180,8 @@
             return [];
         }
     }
-
+     // 🌐 Digital item URLs based on their LibCal digital pass ID
+    // ➕ These IDs come from the public URL (after /passes/) when friendly URL is disabled
     async function fetchDigitalAvailability(accessToken) {
         const baseUrl = 'https://greenburghlibrary.libcal.com/api/1.1';
         const endpoint = '/passes/digital/{id}/availability';
