@@ -2,35 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Library Passes Availability - Project Overview</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2em;
-      line-height: 1.6;
-      max-width: 900px;
-      margin: auto;
-      background: #f9f9f9;
-    }
-    h1, h2, h3 {
-      color: #333;
-    }
-    pre, code {
-      background: #eee;
-      padding: 0.5em;
-      display: block;
-      overflow-x: auto;
-    }
-    a {
-      color: #0645AD;
-    }
-    ul {
-      margin-top: 0;
-    }
-    hr {
-      margin: 2em 0;
-    }
-  </style>
+  
 </head>
 <body>
 
