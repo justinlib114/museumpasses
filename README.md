@@ -16,17 +16,17 @@
     <h2>🔍 Features</h2>
     <ul>
       <li>Live availability for both physical and digital passes</li>
-      <li>Date navigation (previous, next, or select)</li>
-      <li>Booking links directly integrated into results</li>
-      <li>Secure server-side OAuth token retrieval</li>
-      <li>Color-coded status: 🟢 Available, 🔴 Not Available</li>
+      <li>Date navigation (previous, next, or calendar select)</li>
+      <li>One-click booking for available passes</li>
+      <li>Color-coded status: <span style="color: green;">🟢 Available</span>, <span style="color: red;">🔴 Not Available</span></li>
+      <li>Secure OAuth tokens retrieved server-side</li>
     </ul>
   </div>
 
   <div class="section">
     <h2>🖥️ Tech Stack</h2>
     <ul>
-      <li><strong>Backend:</strong> Node.js, Express, node-fetch, dotenv, CORS</li>
+      <li><strong>Backend:</strong> Node.js, Express, node-fetch, dotenv</li>
       <li><strong>Frontend:</strong> HTML, CSS, JavaScript</li>
       <li><strong>API:</strong> LibCal Equipment and Digital Passes</li>
       <li><strong>Deployment:</strong> <a href="https://render.com" target="_blank">Render</a></li>
@@ -43,76 +43,82 @@ package.json         # App dependencies and metadata</code></pre>
 
   <div class="section">
     <h2>🔐 Environment Variables</h2>
-    <p>These must be set in <code>.env</code> (or in Render's environment settings):</p>
-    <pre><code>CLIENT_ID_DIGITAL=your_digital_client_id
-CLIENT_SECRET_DIGITAL=your_digital_client_secret
-CLIENT_ID_PHYSICAL=your_physical_client_id
-CLIENT_SECRET_PHYSICAL=your_physical_client_secret</code></pre>
+    <p>Set the following in your <code>.env</code> file (or Render’s environment settings):</p>
+    <pre><code>CLIENT_ID_PHYSICAL=your_physical_client_id
+CLIENT_SECRET_PHYSICAL=your_physical_client_secret
+CLIENT_ID_DIGITAL=your_digital_client_id
+CLIENT_SECRET_DIGITAL=your_digital_client_secret</code></pre>
   </div>
 
   <div class="section">
     <h2>📡 API Endpoint</h2>
     <pre><code>GET /token?type=physical | digital</code></pre>
-    <p>Returns a short-lived LibCal OAuth token for frontend API calls.</p>
+    <p>Returns a short-lived LibCal OAuth token used by the frontend.</p>
   </div>
 
   <div class="section">
-    <h2>📊 Interface Overview</h2>
+    <h2>⚙️ Customize Your Data</h2>
+    <p>Edit the following constants in <code>public/index.html</code> to match your library's pass configuration:</p>
+
+    <h3>1. 🧾 <code>const itemIds</code> (Physical Pass IDs)</h3>
     <ul>
-      <li>Responsive 2-column layout</li>
-      <li>Passes grouped alphabetically across two tables</li>
-      <li>Displays institution name and availability</li>
-      <li>Booking button shown when available</li>
+      <li>Go to <strong>LibCal Admin → Spaces & Equipment</strong></li>
+      <li>Select your <strong>location</strong> where museum passes are managed</li>
+      <li>Under <strong>Equipment & Categories</strong>, find the <strong>Item ID</strong> (not Category ID)</li>
+      <li>Comma-separate these values in the `itemIds` string</li>
+    </ul>
+
+    <h3>2. 🔗 <code>const physicalItemLinks</code></h3>
+    <ul>
+      <li>Map each <strong>physical item name</strong> to its LibCal public URL</li>
+      <li>The <strong>key must match the item name exactly</strong> as listed in LibCal</li>
+      <li>Friendly URLs (like <code>/passes/hrm</code>) are fine here</li>
+    </ul>
+
+    <h3>3. 🌐 <code>const digitalItemLinks</code></h3>
+    <ul>
+      <li>Visit each digital pass page in LibCal's public view</li>
+      <li>Copy the URL <strong>after removing any friendly URL</strong></li>
+      <li>Use the value after `/passes/` (e.g., <code>5ecf4efa1af9</code>)</li>
+      <li>Example: If URL is <code>https://greenburghlibrary.libcal.com/passes/5ecf4efa1af9</code>, use <code>'5ecf4efa1af9': 'https://greenburghlibrary.libcal.com/passes/wcs'</code></li>
+    </ul>
+
+    <h3>4. 🏷️ <code>const digitalItemNames</code></h3>
+    <ul>
+      <li>Maps the <strong>digitalItemLink ID</strong> to its readable name</li>
+      <li>This name must match the pass name set in the LibCal admin interface</li>
     </ul>
   </div>
 
   <div class="section">
-    <h2>🚀 Local Development</h2>
-    <pre><code>npm install
-npm start</code></pre>
-    <p>Visit <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> in your browser.</p>
+    <h2>🚀 Deploying to Render</h2>
+    <p>This project can be deployed for free on <a href="https://render.com" target="_blank">Render</a>.</p>
+
+    <ol>
+      <li>Sign up at <a href="https://render.com" target="_blank">render.com</a></li>
+      <li>Create a new "Web Service"</li>
+      <li>Connect your GitHub repository</li>
+      <li>Fill out the deployment settings:
+        <ul>
+          <li><strong>Environment:</strong> Node</li>
+          <li><strong>Build Command:</strong> <code>npm install</code></li>
+          <li><strong>Start Command:</strong> <code>npm start</code></li>
+          <li><strong>Node Version:</strong> <code>16</code></li>
+        </ul>
+      </li>
+      <li>Add these environment variables:</li>
+    </ol>
+
+    <pre><code>CLIENT_ID_PHYSICAL
+CLIENT_SECRET_PHYSICAL
+CLIENT_ID_DIGITAL
+CLIENT_SECRET_DIGITAL</code></pre>
+
+    <p>After deployment, you’ll get a live URL like:</p>
+    <pre><code>https://your-app-name.onrender.com</code></pre>
+
+    <p>You can embed this URL in an iframe or share it publicly.</p>
   </div>
-
-### 🚀 Deploying to Render
-
-This project is easily deployable on [Render](https://render.com), a cloud platform for hosting web apps. Follow these steps:
-
-1. **Log in** or **sign up** at [https://render.com](https://render.com).
-
-2. Click **"New Web Service"** from the Render dashboard.
-
-3. **Connect your GitHub repository** or paste the repo URL if deploying from GitHub.
-
-4. Fill out the deployment form:
-   - **Name:** Your app name (e.g., `library-passes`)
-   - **Environment:** Node
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-   - **Node Version:** `16` (already specified in `package.json`)
-
-5. **Set environment variables** (click “Add Environment Variable”):
-   - `CLIENT_ID_PHYSICAL`
-   - `CLIENT_SECRET_PHYSICAL`
-   - `CLIENT_ID_DIGITAL`
-   - `CLIENT_SECRET_DIGITAL`
-
-   Use the same values found in your local `.env` file.
-
-6. Click **"Create Web Service"**. Render will build and deploy your app.
-
-7. Once deployed, you’ll receive a live URL (e.g., `https://library-passes.onrender.com`).
-
-> **Note:** Render automatically redeploys your app when you push new changes to your GitHub repo.
-
-
-  <h3>🌐 Example Deployment URL</h3>
-  <p>
-    <code>https://your-app-name.onrender.com</code><br>
-    You can share this URL publicly or embed it in an iframe if needed.
-  </p>
-</div>
-
-https://greenburghlibrary.libcal.com/passes
 
   <div class="section">
     <h2>📚 Maintained by</h2>
