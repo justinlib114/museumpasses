@@ -150,6 +150,5 @@ CLIENT_SECRET_DIGITAL</code></pre>
     <strong>Greenburgh Public Library</strong><br>
     <a href="https://greenburghlibrary.org" target="_blank">greenburghlibrary.org</a>
   </p>
-
 </body>
 </html>
