@@ -126,12 +126,14 @@
 
     const digitalItemLinks = {
         '5ecf4efa1af9': 'https://greenburghlibrary.libcal.com/passes/wcs',
-        '68b26db9aa61': 'https://greenburghlibrary.libcal.com/passes/fdr'
+        '68b26db9aa61': 'https://greenburghlibrary.libcal.com/passes/fdr',
+        '2fd5d55560c6': 'https://greenburghlibrary.libcal.com/passes/rbf'
     };
 
     const digitalItemNames = {
         '5ecf4efa1af9': 'Wildlife Conservation Society Discount Code',
-        '68b26db9aa61': 'FDR Presidential Library & Museum'
+        '68b26db9aa61': 'FDR Presidential Library & Museum',
+        '2fd5d55560c6': 'The Pocantico Center'
     };
 
     async function fetchAccessToken(type) {
@@ -178,7 +180,7 @@
     async function fetchDigitalAvailability(accessToken) {
         const baseUrl = 'https://greenburghlibrary.libcal.com/api/1.1';
         const endpoint = '/passes/digital/{id}/availability';
-        const ids = '5ecf4efa1af9,68b26db9aa61';
+        const ids = '5ecf4efa1af9,68b26db9aa61, 2fd5d55560c6';
 
         const fromDate = currentDate.toISOString().split('T')[0];
         const toDate = new Date(currentDate);
