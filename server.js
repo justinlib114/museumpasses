@@ -60,6 +60,17 @@ app.get("/token", async (req, res) => {
   }
 });
 
+// Museum Pass Widget Route
+app.get("/widget", async (req, res) => {
+  try {
+    // Currently returns your full index.html (you may override this later)
+    res.sendFile(path.join(__dirname, "public/index.html"));
+  } catch (error) {
+    console.error("Error generating widget:", error);
+    res.status(500).send("<p>Failed to load widget.</p>");
+  }
+});
+
 // Lightweight endpoint for external cron job pings
 app.get("/ping", (req, res) => {
   res.send("OK");
