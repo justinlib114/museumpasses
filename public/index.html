@@ -120,7 +120,8 @@
         "New York Historical Society": "https://greenburghlibrary.libcal.com/passes/nyhistorical",
         "Stepping Stones Museum for Children": "https://greenburghlibrary.libcal.com/passes/steppingstones",
         "Storm King Art Center": "https://greenburghlibrary.libcal.com/passes/skac",
-        "Westchester Children's Museum": "https://greenburghlibrary.libcal.com/passes/wcm"
+        "Westchester Children's Museum": "https://greenburghlibrary.libcal.com/passes/wcm",
+        "Frick Collection": "https://greenburghlibrary.libcal.com/passes/frick"
     };
 
     const digitalItemLinks = {
@@ -148,7 +149,7 @@
 
     async function fetchPhysicalStatus(accessToken) {
         const today = currentDate.toISOString().split('T')[0];
-        const itemIds = '177358,148614,158349,148556,148555,148557,148558,148638,148563,148562,155708,157926,157700,148567,177365,148569,188153,156886';
+        const itemIds = '177358,148614,158349,148556,148555,148557,148558,148638,148563,148562,155708,157926,157700,148567,177365,148569,188153,156886,218912';
         const url = `https://greenburghlibrary.libcal.com/1.1/equipment/item/${itemIds}`;
         const headers = {
             'Authorization': `Bearer ${accessToken}`
